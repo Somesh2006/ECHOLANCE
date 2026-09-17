@@ -3,7 +3,6 @@
 import React from "react";
 import { GrainOverlay } from "@/components/ui/atmosphere-layers";
 import { AmbientBackground } from "@/components/canvas/ambient-background";
-import { CustomCursor } from "@/components/ui/custom-cursor";
 import { CinematicHero } from "@/components/sections/cinematic-hero";
 import { ManifestoSection } from "@/components/manifesto/manifesto-section";
 import { EditorialWork } from "@/components/portfolio/editorial-work";
@@ -15,9 +14,6 @@ import { EditorialReachUs } from "@/components/reach-us/editorial-reach-us";
 export default function Home() {
   return (
     <main className="relative min-h-screen w-full bg-[#080808] text-[#F5F2EA] overflow-x-hidden font-sans">
-      {/* 00 — Bespoke Desktop Custom Cursor with Champagne Aura */}
-      <CustomCursor />
-
       {/* Global Grain / Film Texture Overlay */}
       <GrainOverlay />
 
