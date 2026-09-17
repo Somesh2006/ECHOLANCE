@@ -5,55 +5,67 @@ const config: Config = {
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./data/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        background: "#080808",
+        "background-secondary": "#0B0B0B",
+        foreground: "#F5F2EA",
+        "text-primary": "#F5F2EA",
+        "text-secondary": "#A7A39A",
+        "text-muted": "rgba(245, 242, 234, 0.45)",
+        "border-subtle": "rgba(245, 242, 234, 0.12)",
+        "border-highlight": "rgba(216, 179, 106, 0.35)",
+        gold: {
+          DEFAULT: "#D8B36A",
+          bright: "#F0C978",
+          subtle: "rgba(216, 179, 106, 0.15)",
+          glow: "rgba(216, 179, 106, 0.35)",
+        },
         echolance: {
-          bg: "#07080D",
-          surface: "#0F111A",
-          "surface-hover": "#171A27",
-          border: "rgba(255, 255, 255, 0.08)",
-          "border-light": "rgba(255, 255, 255, 0.15)",
-          cyan: "#38BDF8",
-          indigo: "#6366F1",
-          violet: "#8B5CF6",
-          emerald: "#10B981",
-          rose: "#F43F5E",
-          muted: "#94A3B8",
-          subtle: "#64748B",
+          bg: "#080808",
+          surface: "#0B0B0B",
+          "surface-card": "rgba(245, 242, 234, 0.03)",
+          "surface-hover": "rgba(245, 242, 234, 0.06)",
+          border: "rgba(245, 242, 234, 0.12)",
+          "border-light": "rgba(245, 242, 234, 0.20)",
+          gold: "#D8B36A",
+          "gold-bright": "#F0C978",
+          "gold-subtle": "rgba(216, 179, 106, 0.15)",
+          "gold-glow": "rgba(216, 179, 106, 0.35)",
+          muted: "#A7A39A",
+          secondary: "rgba(245, 242, 234, 0.65)",
         },
       },
       fontFamily: {
-        sans: ["var(--font-geist-sans)", "Inter", "system-ui", "sans-serif"],
-        mono: ["var(--font-geist-mono)", "monospace"],
+        sans: ["var(--font-instrument-sans)", "system-ui", "sans-serif"],
+        serif: ["var(--font-instrument-serif)", "Georgia", "serif"],
+        mono: ["var(--font-ibm-plex-mono)", "monospace"],
+      },
+      spacing: {
+        "18": "4.5rem",
+        "22": "5.5rem",
+        "30": "7.5rem",
+      },
+      backdropBlur: {
+        glass: "16px",
       },
       animation: {
-        "pulse-slow": "pulse 6s cubic-bezier(0.4, 0, 0.6, 1) infinite",
-        "float": "float 8s ease-in-out infinite",
-        "shimmer": "shimmer 2.5s linear infinite",
-        "glow-pulse": "glowPulse 4s ease-in-out infinite alternate",
+        "float-slow": "floatSlow 8s ease-in-out infinite",
+        "pulse-subtle": "pulseSubtle 6s ease-in-out infinite alternate",
+        "spin-very-slow": "spin 40s linear infinite",
       },
       keyframes: {
-        float: {
+        floatSlow: {
           "0%, 100%": { transform: "translateY(0px)" },
-          "50%": { transform: "translateY(-12px)" },
+          "50%": { transform: "translateY(-8px)" },
         },
-        shimmer: {
-          "0%": { backgroundPosition: "-200% 0" },
-          "100%": { backgroundPosition: "200% 0" },
+        pulseSubtle: {
+          "0%": { opacity: "0.4" },
+          "100%": { opacity: "0.8" },
         },
-        glowPulse: {
-          "0%": { opacity: "0.4", filter: "blur(40px)" },
-          "100%": { opacity: "0.8", filter: "blur(60px)" },
-        },
-      },
-      backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "glass-gradient": "linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%)",
-        "glass-border": "linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.02) 100%)",
       },
     },
   },
@@ -61,3 +73,4 @@ const config: Config = {
 };
 
 export default config;
+

@@ -1,63 +1,92 @@
 "use client";
 
-import React, { ReactNode } from "react";
+import React from "react";
 import { cn } from "@/utils/cn";
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  children: ReactNode;
-  variant?: "primary" | "secondary" | "glass" | "outline" | "ghost";
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  children: React.ReactNode;
+  variant?:
+    | "primary-white"
+    | "primary-dark"
+    | "secondary-glass"
+    | "primary"
+    | "gold"
+    | "secondary"
+    | "glass"
+    | "outline"
+    | "ghost";
   size?: "sm" | "md" | "lg";
-  icon?: ReactNode;
+  withArrow?: boolean;
+  icon?: React.ReactNode;
   iconPosition?: "left" | "right";
   glow?: boolean;
 }
 
 export function Button({
   children,
-  variant = "primary",
+  variant = "primary-white",
   size = "md",
+  withArrow = false,
   icon,
   iconPosition = "right",
   glow = false,
   className,
   ...props
 }: ButtonProps) {
-  const baseStyles =
-    "inline-flex items-center justify-center font-medium transition-all duration-300 rounded-full select-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-echolance-cyan/50 disabled:opacity-50 disabled:cursor-not-allowed";
+  const baseClasses =
+    "group inline-flex items-center justify-center font-medium rounded-full transition-all duration-300 select-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/30 disabled:opacity-50 disabled:cursor-not-allowed";
 
-  const sizeStyles = {
+  const sizeClasses = {
     sm: "text-xs px-4 py-2 gap-1.5",
-    md: "text-sm px-6 py-3 gap-2",
-    lg: "text-base px-8 py-4 gap-2.5 shadow-lg",
+    md: "text-xs sm:text-sm px-6 py-3.5 gap-2 tracking-wide",
+    lg: "text-sm sm:text-base px-8 py-4 gap-2.5 tracking-wide",
   };
 
-  const variantStyles = {
+  const variantClasses: Record<string, string> = {
+    "primary-white":
+      "bg-white text-black hover:bg-zinc-200 active:scale-[0.98] shadow-sm",
     primary:
-      "bg-gradient-to-r from-echolance-cyan via-echolance-indigo to-echolance-violet text-white hover:brightness-110 hover:shadow-[0_0_25px_rgba(56,189,248,0.4)] active:scale-95",
+      "bg-white text-black hover:bg-zinc-200 active:scale-[0.98] shadow-sm",
+    "primary-dark":
+      "bg-[#0D0F14] text-white border border-white/20 hover:bg-[#151822] hover:border-white/40 active:scale-[0.98]",
+    "secondary-glass":
+      "bg-[rgba(255,255,255,0.06)] backdrop-blur-[16px] border border-[rgba(255,255,255,0.12)] text-white hover:bg-[rgba(255,255,255,0.12)] hover:border-[rgba(255,255,255,0.22)] active:scale-[0.98]",
     secondary:
-      "bg-white text-slate-950 hover:bg-slate-100 hover:shadow-[0_0_20px_rgba(255,255,255,0.3)] active:scale-95",
+      "bg-[rgba(255,255,255,0.06)] backdrop-blur-[16px] border border-[rgba(255,255,255,0.12)] text-white hover:bg-[rgba(255,255,255,0.12)] hover:border-[rgba(255,255,255,0.22)] active:scale-[0.98]",
     glass:
-      "bg-white/5 backdrop-blur-md border border-white/10 text-white hover:bg-white/10 hover:border-white/20 active:scale-95",
+      "bg-[rgba(255,255,255,0.06)] backdrop-blur-[16px] border border-[rgba(255,255,255,0.12)] text-white hover:bg-[rgba(255,255,255,0.12)] active:scale-[0.98]",
+    gold:
+      "bg-echolance-gold text-slate-950 font-bold hover:bg-[#ebd095] hover:shadow-[0_0_25px_rgba(229,192,123,0.35)] active:scale-[0.98]",
     outline:
-      "border border-echolance-border text-slate-200 hover:border-echolance-cyan/50 hover:text-white hover:bg-echolance-cyan/5 active:scale-95",
+      "bg-transparent border border-white/20 text-white hover:bg-white/5 hover:border-white/40 active:scale-[0.98]",
     ghost:
-      "text-slate-300 hover:text-white hover:bg-white/5 active:scale-95",
+      "bg-transparent text-white/80 hover:text-white hover:bg-white/5",
   };
 
   return (
     <button
       className={cn(
-        baseStyles,
-        sizeStyles[size],
-        variantStyles[variant],
-        glow && "shadow-[0_0_30px_rgba(56,189,248,0.3)]",
+        baseClasses,
+        sizeClasses[size],
+        variantClasses[variant] || variantClasses["primary-white"],
+        glow && "shadow-[0_0_30px_rgba(229,192,123,0.3)]",
         className
       )}
       {...props}
     >
       {icon && iconPosition === "left" && <span className="shrink-0">{icon}</span>}
       <span>{children}</span>
-      {icon && iconPosition === "right" && <span className="shrink-0 transition-transform group-hover:translate-x-1">{icon}</span>}
+      {withArrow && (
+        <span className="transition-transform duration-300 group-hover:translate-x-1 inline-block">
+          →
+        </span>
+      )}
+      {icon && iconPosition === "right" && (
+        <span className="shrink-0 transition-transform duration-300 group-hover:translate-x-1 inline-block">
+          {icon}
+        </span>
+      )}
     </button>
   );
 }

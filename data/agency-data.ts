@@ -1,39 +1,64 @@
-export interface Service {
-  id: string;
+export interface ServiceItem {
   number: string;
+  id: string;
   title: string;
+  category: string;
+  description: string;
+  deliverables: string[];
   shortDesc: string;
   fullDesc: string;
   iconName: string;
-  deliverables: string[];
   metrics: string;
-  tag: string;
-  previewCode: string;
+  previewType: "web-design" | "web-dev" | "ecommerce" | "landing" | "business" | "maintenance";
 }
 
-export interface Project {
+export type Service = ServiceItem;
+
+export interface WorkItem {
+  number: string;
   id: string;
   title: string;
+  type: string;
+  status: "SELECTED CONCEPT" | "CONCEPT" | "ARCHIVED CONCEPT";
+  description: string;
+  technologies: string[];
   client: string;
   category: string;
   year: string;
-  description: string;
   result: string;
   tags: string[];
   image: string;
   link: string;
-  accentColor: string;
-  featured: boolean;
-  stats: { label: string; value: string }[];
 }
 
-export interface ProcessStep {
-  step: string;
+export type Project = WorkItem;
+
+export interface ProcessItem {
+  number: string;
+  id: string;
   title: string;
-  duration: string;
+  headline: string;
   description: string;
+  outputs: string[];
+  step: string;
   deliverables: string[];
-  keyOutcome: string;
+}
+
+export type ProcessStep = ProcessItem;
+
+export interface ValueItem {
+  title: string;
+  description: string;
+  subtitle: string;
+  icon: string;
+}
+
+export type Pillar = ValueItem;
+
+export interface AgencyStat {
+  label: string;
+  value: string;
+  detail: string;
 }
 
 export interface Testimonial {
@@ -47,309 +72,323 @@ export interface Testimonial {
   impactMetric: string;
 }
 
-export interface Differentiator {
+// 01 — SERVICES (Canonical structure)
+export const SERVICES_DATA: ServiceItem[] = [
+  {
+    number: "01",
+    id: "web-design",
+    title: "WEB DESIGN",
+    category: "Visual Identity & Art Direction",
+    description:
+      "Bespoke digital identities and human-centered user interfaces crafted for distinction and clear visual hierarchy.",
+    shortDesc: "Bespoke digital identities and human-centered user interfaces crafted for distinction.",
+    fullDesc: "We craft custom visual platforms that capture your brand essence while prioritizing conversion psychology.",
+    iconName: "LayoutGrid",
+    deliverables: [
+      "Custom Design Systems",
+      "Interactive Prototypes",
+      "Design Tokens",
+      "Micro-Interactions",
+    ],
+    metrics: "Visual Craft",
+    previewType: "web-design",
+  },
+  {
+    number: "02",
+    id: "web-development",
+    title: "WEB DEVELOPMENT",
+    category: "Full-Stack & Next.js Engineering",
+    description:
+      "Modern Next.js and TypeScript architectures engineered for sub-second performance, accessibility, and clean maintainability.",
+    shortDesc: "Next.js and TypeScript architectures engineered for sub-second performance.",
+    fullDesc: "Our engineering stack leverages modern headless solutions, server-side rendering, and clean modular codebases.",
+    iconName: "Code2",
+    deliverables: [
+      "Next.js Architecture",
+      "TypeScript Codebases",
+      "API & Webhook Integrations",
+      "Performance Audits",
+    ],
+    metrics: "Sub-Second Paint",
+    previewType: "web-dev",
+  },
+  {
+    number: "03",
+    id: "ecommerce",
+    title: "E-COMMERCE",
+    category: "Headless Commerce & Funnels",
+    description:
+      "Custom storefronts designed for intuitive product discovery, fast checkout experiences, and global scalability.",
+    shortDesc: "Custom storefronts designed for intuitive product discovery and checkout.",
+    fullDesc: "Custom storefront solutions with fast catalog search, global currencies, and optimized checkout funnels.",
+    iconName: "ShoppingBag",
+    deliverables: [
+      "Headless Storefronts",
+      "Custom Checkout Flows",
+      "Catalog Search Optimization",
+      "Payment Gateway Integration",
+    ],
+    metrics: "Headless Speed",
+    previewType: "ecommerce",
+  },
+  {
+    number: "04",
+    id: "landing-pages",
+    title: "LANDING PAGES",
+    category: "High-Impact Campaign Platforms",
+    description:
+      "Precision-crafted single-page experiences structured with strong typographic narrative and focused call-to-action funnels.",
+    shortDesc: "Targeted single-page experiences built with strategic typography.",
+    fullDesc: "High-frequency campaign platforms structured with strategic typography, micro-interactions, and conversion focus.",
+    iconName: "Sparkles",
+    deliverables: [
+      "Editorial Layouts",
+      "Visual Storytelling",
+      "A/B Structure Ready",
+      "Responsive Optimization",
+    ],
+    metrics: "High Conversion",
+    previewType: "landing",
+  },
+  {
+    number: "05",
+    id: "ui-ux",
+    title: "UI/UX",
+    category: "Product Architecture & Systems",
+    description:
+      "End-to-end interface design, user journey mapping, and component architecture for complex web applications.",
+    shortDesc: "End-to-end interface design, user journeys, and component architecture.",
+    fullDesc: "Comprehensive product design systems, user journey mapping, wireframing, and design token libraries.",
+    iconName: "Globe",
+    deliverables: [
+      "User Journey Mapping",
+      "Design System Libraries",
+      "Wireframing & Prototypes",
+      "Usability Architecture",
+    ],
+    metrics: "Design Systems",
+    previewType: "business",
+  },
+  {
+    number: "06",
+    id: "maintenance",
+    title: "MAINTENANCE",
+    category: "Long-Term Technical Partnership",
+    description:
+      "Proactive code updates, security monitoring, performance tuning, and continuous feature sprints.",
+    shortDesc: "Continuous engineering partnership, security monitoring, and updates.",
+    fullDesc: "Ongoing design updates, feature developments, security hardening, and Core Web Vitals audits.",
+    iconName: "ShieldCheck",
+    deliverables: [
+      "Performance Monitoring",
+      "Security Updates",
+      "Feature Iterations",
+      "Dependency Upgrades",
+    ],
+    metrics: "Active Support",
+    previewType: "maintenance",
+  },
+];
+
+export const SERVICES = SERVICES_DATA;
+
+// 02 — WORK (3 High-End Concept Prototypes)
+export const WORK_DATA: WorkItem[] = [
+  {
+    number: "01",
+    id: "restaurant-website",
+    title: "RESTAURANT WEBSITE",
+    type: "Hospitality & Culinary Atelier",
+    status: "SELECTED CONCEPT",
+    description:
+      "An atmospheric editorial presence with tasting menus, reservations, and refined typography.",
+    technologies: ["Next.js", "GSAP", "Tailwind CSS"],
+    client: "Selected Concept",
+    category: "WEB DESIGN / DEVELOPMENT",
+    year: "2026",
+    result: "Atmospheric Dining Platform",
+    tags: ["Next.js", "GSAP", "Tailwind CSS"],
+    image: "",
+    link: "#",
+  },
+  {
+    number: "02",
+    id: "fashion-ecommerce",
+    title: "FASHION E-COMMERCE",
+    type: "Monochrome Runway Storefront",
+    status: "SELECTED CONCEPT",
+    description:
+      "A high-contrast digital flagship centered on silhouette, curated lookbooks, and fluid cart micro-interactions.",
+    technologies: ["Next.js", "TypeScript", "Tailwind CSS"],
+    client: "Selected Concept",
+    category: "E-COMMERCE / UI DESIGN",
+    year: "2026",
+    result: "Monochrome Storefront",
+    tags: ["Next.js", "TypeScript", "Headless Cart"],
+    image: "",
+    link: "#",
+  },
+  {
+    number: "03",
+    id: "business-website",
+    title: "BUSINESS WEBSITE",
+    type: "Strategic Advisory Flagship",
+    status: "SELECTED CONCEPT",
+    description:
+      "A structured corporate platform communicating market authority, practice areas, and strategic insights.",
+    technologies: ["Next.js", "Framer Motion", "Tailwind CSS"],
+    client: "Selected Concept",
+    category: "WEB DESIGN / DEVELOPMENT",
+    year: "2026",
+    result: "Advisory Flagship",
+    tags: ["Next.js", "Framer Motion", "Tailwind CSS"],
+    image: "",
+    link: "#",
+  },
+  {
+    number: "04",
+    id: "digital-platform",
+    title: "DIGITAL PLATFORM",
+    type: "Modular Cloud Infrastructure",
+    status: "SELECTED CONCEPT",
+    description:
+      "A full-width high-performance platform interface engineered with sub-second data streaming and unified token libraries.",
+    technologies: ["Next.js", "TypeScript", "Tailwind CSS"],
+    client: "Selected Concept",
+    category: "PLATFORM ARCHITECTURE",
+    year: "2026",
+    result: "Platform Interface",
+    tags: ["Next.js", "TypeScript", "Design Tokens"],
+    image: "",
+    link: "#",
+  },
+];
+
+export const PROJECTS = WORK_DATA;
+
+// 03 — PROCESS
+export const PROCESS_DATA: ProcessItem[] = [
+  {
+    number: "01",
+    step: "01",
+    id: "idea",
+    title: "IDEA",
+    headline: "Conceptual Blueprint & Architecture",
+    description: "Understanding brand positioning, project parameters, and technical scope.",
+    outputs: ["Blueprint", "Information Architecture"],
+    deliverables: ["Blueprint", "Information Architecture"],
+  },
+  {
+    number: "02",
+    step: "02",
+    id: "structure",
+    title: "STRUCTURE",
+    headline: "Wireframes & Spatial Grid",
+    description: "Establishing layout hierarchy and intuitive user journeys.",
+    outputs: ["Grid Layout", "Spatial Hierarchy"],
+    deliverables: ["Grid Layout", "Spatial Hierarchy"],
+  },
+  {
+    number: "03",
+    step: "03",
+    id: "design",
+    title: "DESIGN",
+    headline: "Art Direction & Design Tokens",
+    description: "Custom typography, restrained dark aesthetics, and purposeful motion.",
+    outputs: ["Design System", "Motion Tokens"],
+    deliverables: ["Design System", "Motion Tokens"],
+  },
+  {
+    number: "04",
+    step: "04",
+    id: "build",
+    title: "BUILD",
+    headline: "Next.js Engineering & Integration",
+    description: "Clean TypeScript codebases engineered for speed and accessibility.",
+    outputs: ["Production Codebase", "Component Library"],
+    deliverables: ["Production Codebase", "Component Library"],
+  },
+  {
+    number: "05",
+    step: "05",
+    id: "live",
+    title: "LIVE",
+    headline: "Edge Deployment & Launch",
+    description: "Sub-second load times, global edge delivery, and ongoing support.",
+    outputs: ["Edge Deployment", "Verification"],
+    deliverables: ["Edge Deployment", "Verification"],
+  },
+];
+
+export const PROCESS_STEPS = PROCESS_DATA;
+
+// 04 — 3 CORE PRINCIPLES
+export interface PrincipleItem {
+  number: string;
   title: string;
-  subtitle: string;
   description: string;
-  icon: string;
-  highlight: string;
 }
 
-export const AGENCY_STATS = [
-  { label: "Products Shipped", value: "120+", detail: "Across 14 countries" },
-  { label: "Lighthouse Performance", value: "99+", detail: "Guaranteed Core Web Vitals" },
-  { label: "Average Client ROI", value: "3.4x", detail: "Conversion lift in 90 days" },
-  { label: "Client Satisfaction", value: "99.8%", detail: "5-star rating across reviews" },
-];
-
-export const SERVICES: Service[] = [
+export const CORE_PRINCIPLES: PrincipleItem[] = [
   {
-    id: "web-design",
     number: "01",
-    title: "Bespoke Web Design",
-    shortDesc: "High-impact visual identities and UI systems engineered for immediate market presence.",
-    fullDesc: "We craft custom digital platforms that capture brand essence while prioritizing conversion psychology. Every layout, typography scale, and interaction is designed with mathematical precision.",
-    iconName: "LayoutGrid",
-    deliverables: ["Custom Design Systems", "Interactive Prototypes", "Micro-interaction Specs", "Brand Alignment"],
-    metrics: "+140% Engagement",
-    tag: "Visual Excellence",
-    previewCode: `// Echolance Design Engine
-const designSystem = {
-  grid: "12-Column Responsive Fluid",
-  typography: "Display Sans + Monospace Accent",
-  contrastRatio: "AAA Compliant",
-  motionProfile: "Spring Physics (0.8s, 120 stiffness)",
-};`,
+    title: "BESPOKE BY DEFAULT",
+    description:
+      "Every project is built from the ground up for the brand it represents. We do not use off-the-shelf templates or generic visual builders.",
   },
   {
-    id: "web-development",
     number: "02",
-    title: "Modern Web Development",
-    shortDesc: "Next-generation React & Next.js architectures with sub-second page loads and zero layout shift.",
-    fullDesc: "Our engineering stack leverages modern headless solutions, SSR/SSG rendering, dynamic asset optimization, and clean TypeScript code bases that scale effortlessly.",
-    iconName: "Code2",
-    deliverables: ["Next.js & React Apps", "TypeScript Architecture", "Headless CMS Integration", "API & Webhook Engines"],
-    metrics: "< 0.6s First Paint",
-    tag: "Next.js & TypeScript",
-    previewCode: `// Performant Architecture
-export async function generatePlatformCore() {
-  const edgeData = await fetchEdgeCache();
-  return <DigitalCanvas data={edgeData} fps={60} />;
-}`,
+    title: "DESIGN + ENGINEERING",
+    description:
+      "Aesthetics and technical execution are inseparable. We write clean, modern code that renders quickly, moves with purpose, and feels effortless.",
   },
   {
-    id: "ui-ux",
     number: "03",
-    title: "UI/UX & Product Design",
-    shortDesc: "Human-centric digital interfaces shaped by empirical user research and behavioral analysis.",
-    fullDesc: "We transform complex business requirements into intuitive product workflows that reduce user friction, elevate retention rates, and turn casual visitors into loyal advocates.",
-    iconName: "Figma",
-    deliverables: ["User Journey Mapping", "Wireframes & Flows", "Design Tokens & Kits", "Usability Testing"],
-    metrics: "-65% User Friction",
-    tag: "User Experience",
-    previewCode: `// UX State Controller
-interface UserFlowState {
-  step: "discovery" | "interaction" | "conversion";
-  frictionScore: number; // Goal: 0.00
-  completionRate: "98.4%";
-}`,
-  },
-  {
-    id: "ecommerce",
-    number: "04",
-    title: "E-Commerce Experiences",
-    shortDesc: "Bespoke storefronts engineered for high conversion rates, fast checkout, and seamless scale.",
-    fullDesc: "Forget cookie-cutter templates. We build headless, custom e-commerce platforms with lightning-fast catalog navigation, localized currencies, and optimized checkout funnels.",
-    iconName: "ShoppingBag",
-    deliverables: ["Headless Storefronts", "Shopify / Custom Backend", "Stripe & Crypto Pay", "Cart Optimization"],
-    metrics: "+42% Conversion Rate",
-    tag: "Headless Commerce",
-    previewCode: `// Commerce Engine
-const checkoutStream = new CommerceEngine({
-  instantPay: true,
-  zeroLagCart: true,
-  globalCDN: "Edge-Deploys",
-});`,
-  },
-  {
-    id: "optimization",
-    number: "05",
-    title: "Speed & SEO Optimization",
-    shortDesc: "Transforming slow sites into 100/100 Lighthouse performance powerhouses.",
-    fullDesc: "Speed is a core feature. We perform deep bundle analysis, asset compression, critical CSS path extraction, and technical SEO structure to dominate search rankings.",
-    iconName: "Zap",
-    deliverables: ["Lighthouse Audit 100", "Core Web Vitals Pass", "Technical SEO Schema", "CDN Edge Caching"],
-    metrics: "100/100 Performance",
-    tag: "Speed Engineering",
-    previewCode: `// Speed Benchmark
-const auditResults = {
-  performance: 100,
-  accessibility: 100,
-  bestPractices: 100,
-  seo: 100,
-  lcp: "0.45s",
-};`,
-  },
-  {
-    id: "support",
-    number: "06",
-    title: "Continuous Growth & Support",
-    shortDesc: "Long-term engineering partnership, regular updates, security monitoring, and iterative enhancements.",
-    fullDesc: "Launch is just step one. We provide ongoing design iterations, feature developments, security hardening, and performance monitoring so your site evolves as your business grows.",
-    iconName: "ShieldCheck",
-    deliverables: ["24/7 Uptime Monitor", "Bi-Weekly Feature Sprints", "Security Patching", "Analytics Reports"],
-    metrics: "99.99% Uptime",
-    tag: "Partnership",
-    previewCode: `// System Guard
-const guard = new SecurityGuard({
-  uptimeTarget: 99.99,
-  threatResponse: "Instant AI Defense",
-  sprintCadence: "Bi-Weekly Upgrades",
-});`,
+    title: "BUILT TO EVOLVE",
+    description:
+      "We structure platforms to scale cleanly over time, making future iterations, performance enhancements, and new features simple to introduce.",
   },
 ];
 
-export const PROJECTS: Project[] = [
+export const AGENCY_VALUES: ValueItem[] = [
   {
-    id: "aura-architects",
-    title: "Aura Architecture Studio",
-    client: "Aura Global",
-    category: "Architecture & Design",
-    year: "2026",
-    description: "A spatial digital gallery for an international architectural studio showcasing luxury residential structures.",
-    result: "+210% High-Value Client Inquiries in 60 Days",
-    tags: ["Next.js", "GSAP 3D", "Tailwind CSS", "WebGL"],
-    image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
-    link: "#",
-    accentColor: "#38BDF8",
-    featured: true,
-    stats: [
-      { label: "Inquiry Growth", value: "+210%" },
-      { label: "Page Load", value: "0.4s" },
-      { label: "Awards", value: "Awwwards SOTD" },
-    ],
-  },
-  {
-    id: "veloce-mobility",
-    title: "Veloce Autonomous Electric",
-    client: "Veloce Motors",
-    category: "Automotive & EV",
-    year: "2026",
-    description: "Interactive launch experience for next-gen electric hypercars featuring real-time 3D configurator.",
-    result: "$18M Pre-orders Reserved at Launch Event",
-    tags: ["React 19", "Three.js", "Custom Sound FX", "Framer Motion"],
-    image: "https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&w=1200&q=80",
-    link: "#",
-    accentColor: "#6366F1",
-    featured: true,
-    stats: [
-      { label: "Pre-orders", value: "$18M" },
-      { label: "Average Session", value: "4m 12s" },
-      { label: "Configurators", value: "45K+" },
-    ],
-  },
-  {
-    id: "synthetix-ai",
-    title: "Synthetix Design Engine",
-    client: "Synthetix Inc.",
-    category: "SaaS & AI Tooling",
-    year: "2025",
-    description: "High-contrast dark interface for an AI creative workspace used by 100,000+ visual designers globally.",
-    result: "4.8x Conversion Rate Lift on Pro Subscriptions",
-    tags: ["TypeScript", "Canvas API", "Tailwind CSS", "Dark Mode UI"],
-    image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80",
-    link: "#",
-    accentColor: "#8B5CF6",
-    featured: true,
-    stats: [
-      { label: "Conversion Lift", value: "4.8x" },
-      { label: "Active Users", value: "100K+" },
-      { label: "Lighthouse", value: "100/100" },
-    ],
-  },
-  {
-    id: "kroma-living",
-    title: "Kroma Modern Living",
-    client: "Kroma Furniture",
-    category: "E-Commerce",
-    year: "2025",
-    description: "Headless minimalist furniture storefront with instant catalog search and AR room preview.",
-    result: "+68% Organic Traffic & 38% Revenue Increase",
-    tags: ["Shopify Headless", "Next.js", "Tailwind", "Stripe"],
-    image: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1200&q=80",
-    link: "#",
-    accentColor: "#10B981",
-    featured: false,
-    stats: [
-      { label: "Revenue Lift", value: "+38%" },
-      { label: "Cart Abandonment", value: "-24%" },
-    ],
-  },
-];
-
-export const PROCESS_STEPS: ProcessStep[] = [
-  {
-    step: "01",
-    title: "Discovery & Strategy",
-    duration: "Week 1",
-    description: "We deep-dive into your business goals, competitive landscape, target audience psychology, and technical requirements.",
-    deliverables: ["Product Vision Brief", "User Archetypes", "Tech Stack Blueprint", "Project Roadmap"],
-    keyOutcome: "Crystal-clear alignment and defined success metrics before a single line of code.",
-  },
-  {
-    step: "02",
-    title: "UI/UX & Visual Direction",
-    duration: "Weeks 2-3",
-    description: "We craft interactive visual prototypes, custom typography layouts, micro-interaction models, and visual design tokens.",
-    deliverables: ["Figma Design System", "Interactive Prototype", "Motion Guidelines", "Design Approval"],
-    keyOutcome: "A stunning, custom visual direction validated for user engagement.",
-  },
-  {
-    step: "03",
-    title: "Engineering & Motion",
-    duration: "Weeks 4-5",
-    description: "We turn designs into clean Next.js/React code with GSAP scroll animations, responsive CSS, and sub-second page performance.",
-    deliverables: ["Clean Component Library", "GSAP Motion Scripts", "API Integrations", "100 Speed Audit"],
-    keyOutcome: "Pixel-perfect frontend architecture optimized for 60 FPS performance.",
-  },
-  {
-    step: "04",
-    title: "Testing & Launch",
-    duration: "Week 6",
-    description: "Rigorous cross-device testing, accessibility validation, SEO metadata indexing, and zero-downtime deployment.",
-    deliverables: ["Cross-browser Verification", "SEO Audit", "SSL & Domain Setup", "Production Launch"],
-    keyOutcome: "A flawless, high-speed digital experience live to the world.",
-  },
-  {
-    step: "05",
-    title: "Optimization & Growth",
-    duration: "Ongoing",
-    description: "We monitor live analytics, user heatmaps, Core Web Vitals, and continuously ship bi-weekly enhancements.",
-    deliverables: ["Uptime Monitoring", "Conversion Analysis", "Feature Sprints", "Dedicated Support"],
-    keyOutcome: "Continuous growth and competitive advantage for your brand.",
-  },
-];
-
-export const DIFFERENTIATORS: Differentiator[] = [
-  {
-    title: "100% Bespoke Code",
-    subtitle: "Zero generic templates or bloated visual page builders.",
-    description: "We write clean, modular Next.js and TypeScript code crafted specifically for your brand's unique goals.",
+    title: "BESPOKE BY DEFAULT",
+    subtitle: "Zero generic templates or visual builders.",
+    description: "Every project is built from the ground up for the brand it represents.",
     icon: "Code2",
-    highlight: "Custom Engine",
   },
   {
-    title: "Sub-Second Speed",
-    subtitle: "Speed is conversion. We optimize down to the millisecond.",
-    description: "Our platforms consistently achieve 99+ Core Web Vitals scores and instantaneous page transitions.",
-    icon: "Zap",
-    highlight: "100/100 Lighthouse",
-  },
-  {
-    title: "Purposeful Animation",
-    subtitle: "Motion that guides, engages, and elevates.",
-    description: "GSAP and physics-based animations engineered to feel premium and responsive, never distracting.",
+    title: "DESIGN + ENGINEERING",
+    subtitle: "Aesthetics and technical execution in tandem.",
+    description: "We write clean, modern code that renders quickly, moves with purpose, and feels effortless.",
     icon: "Sparkles",
-    highlight: "60 FPS Motion",
   },
   {
-    title: "Conversion-Focused UX",
-    subtitle: "Designed to drive real business metrics.",
-    description: "Every CTA, layout section, and typography hierarchy is strategically built to convert visitors into clients.",
-    icon: "TrendingUp",
-    highlight: "Measurable ROI",
+    title: "BUILT TO EVOLVE",
+    subtitle: "Scale cleanly over time without technical debt.",
+    description: "Structured for longevity, making future iterations and enhancements simple to introduce.",
+    icon: "ShieldCheck",
   },
 ];
 
-export const TESTIMONIALS: Testimonial[] = [
-  {
-    id: "1",
-    quote: "Echolance redesigned our platform from the ground up. The visual quality is simply unmatched, and our inbound client conversion jumped by 210% within two months of launch.",
-    author: "Elena Rostova",
-    role: "Founder & Creative Director",
-    company: "Aura Architecture Studio",
-    rating: 5,
-    avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80",
-    impactMetric: "+210% Lead Conversion",
-  },
-  {
-    id: "2",
-    quote: "Working with Echolance felt like having a world-class senior design and engineering team right in our office. They delivered an interactive 3D site ahead of schedule.",
-    author: "Marcus Vance",
-    role: "VP of Digital",
-    company: "Veloce Motors",
-    rating: 5,
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80",
-    impactMetric: "$18M Pre-orders",
-  },
-  {
-    id: "3",
-    quote: "Our previous website was slow and looked like every other SaaS tool. Echolance gave us a distinctive dark aesthetic with 100/100 performance scores. Truly exceptional.",
-    author: "Dr. Aris Thorne",
-    role: "Chief Product Officer",
-    company: "Synthetix AI",
-    rating: 5,
-    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80",
-    impactMetric: "4.8x Conversion Lift",
-  },
+export const WHY_POINTS = AGENCY_VALUES;
+
+
+export const AGENCY_STATS: AgencyStat[] = [
+  { label: "Bespoke Architecture", value: "100%", detail: "Zero visual page builders" },
+  { label: "Performance Target", value: "Sub-Second", detail: "Optimized Core Web Vitals" },
+  { label: "Core Stack", value: "Next.js", detail: "TypeScript, GSAP, Tailwind" },
+  { label: "Art Direction", value: "Editorial", detail: "Tailored brand platforms" },
 ];
+
+export const TESTIMONIALS: Testimonial[] = [];
+
+// Navigation Anchors (Primary Destinations)
+export const NAV_LINKS = [
+  { label: "HOME", href: "#home" },
+  { label: "WORK", href: "#work" },
+  { label: "SERVICES", href: "#services" },
+  { label: "ABOUT", href: "#about" },
+  { label: "CONTACT", href: "#contact" },
+];
+

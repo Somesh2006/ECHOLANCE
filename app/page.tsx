@@ -1,62 +1,49 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
+import { GrainOverlay } from "@/components/ui/atmosphere-layers";
 import { AmbientBackground } from "@/components/canvas/ambient-background";
-import { Navbar } from "@/components/sections/navbar";
-import { Hero } from "@/components/sections/hero";
-import { TrustIntro } from "@/components/sections/trust-intro";
-import { Services } from "@/components/sections/services";
-import { SelectedWork } from "@/components/sections/selected-work";
-import { WhyUs } from "@/components/sections/why-us";
-import { Process } from "@/components/sections/process";
-import { Testimonials } from "@/components/sections/testimonials";
-import { CtaBanner } from "@/components/sections/cta-banner";
-import { Footer } from "@/components/sections/footer";
-import { ProjectModal } from "@/components/ui/modal";
+import { CustomCursor } from "@/components/ui/custom-cursor";
+import { CinematicHero } from "@/components/sections/cinematic-hero";
+import { ManifestoSection } from "@/components/manifesto/manifesto-section";
+import { EditorialWork } from "@/components/portfolio/editorial-work";
+import { EditorialServices } from "@/components/services/editorial-services";
+import { EditorialProcess } from "@/components/process/editorial-process";
+import { EditorialAbout } from "@/components/about/editorial-about";
+import { EditorialReachUs } from "@/components/reach-us/editorial-reach-us";
 
 export default function Home() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const handleOpenModal = () => setIsModalOpen(true);
-  const handleCloseModal = () => setIsModalOpen(false);
-
   return (
-    <main className="relative min-h-screen bg-[#07080d] text-slate-100 overflow-x-hidden">
-      {/* Premium Animated Canvas Background */}
+    <main className="relative min-h-screen w-full bg-[#080808] text-[#F5F2EA] overflow-x-hidden font-sans">
+      {/* 00 — Bespoke Desktop Custom Cursor with Champagne Aura */}
+      <CustomCursor />
+
+      {/* Global Grain / Film Texture Overlay */}
+      <GrainOverlay />
+
+      {/* Global Gold Dust & Interactive Glitter Canvas */}
       <AmbientBackground />
 
-      {/* Navigation Bar */}
-      <Navbar onOpenModal={handleOpenModal} />
+      {/* 01 — HOME: Approved Cinematic Hero (100% Video Preserved) */}
+      <CinematicHero />
 
-      {/* Hero Section */}
-      <Hero onOpenModal={handleOpenModal} />
+      {/* 02 — WHAT WE DO: Kinetic Typography & Orbital Arc */}
+      <ManifestoSection />
 
-      {/* Trust & Stats Intro */}
-      <TrustIntro />
+      {/* 03 — SELECTED WORK: Luxury Gold Edge Exhibits & Atmosphere Backdrops */}
+      <EditorialWork />
 
-      {/* Interactive Services Section */}
-      <Services onOpenModal={handleOpenModal} />
+      {/* 04 — SERVICES: Interactive Typographic Installation & Live Generative Stage */}
+      <EditorialServices />
 
-      {/* Selected Work Portfolio Section */}
-      <SelectedWork onOpenModal={handleOpenModal} />
+      {/* 05 — PROCESS: Continuous Flowing Gold Path & Dynamic Stage Transformation */}
+      <EditorialProcess />
 
-      {/* Why Echolance Differentiators */}
-      <WhyUs onOpenModal={handleOpenModal} />
+      {/* 06 — ABOUT: Dark Editorial Poster & Typographic Rotating Compass */}
+      <EditorialAbout />
 
-      {/* 5-Stage Process Workflow */}
-      <Process onOpenModal={handleOpenModal} />
-
-      {/* Client Endorsements / Testimonials */}
-      <Testimonials />
-
-      {/* Closing CTA Section */}
-      <CtaBanner onOpenModal={handleOpenModal} />
-
-      {/* Footer */}
-      <Footer />
-
-      {/* Interactive Inquiry Modal */}
-      <ProjectModal isOpen={isModalOpen} onClose={handleCloseModal} />
+      {/* 07 — REACH US: Dramatic Final Climax CTA, Dispatch Terminal & Studio Footer */}
+      <EditorialReachUs />
     </main>
   );
 }

@@ -2,172 +2,186 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { PROCESS_STEPS, ProcessStep } from "@/data/agency-data";
 import { SectionHeading } from "../ui/section-heading";
-import {
-  Search,
-  PenTool,
-  Code,
-  Rocket,
-  RefreshCw,
-  CheckCircle2,
-  Clock,
-  ArrowRight,
-  Sparkles,
-} from "lucide-react";
-import { Button } from "../ui/button";
+import { ArrowRight, CheckCircle2, Sparkles, Layers, Target, Rocket, TrendingUp } from "lucide-react";
+import { MagneticWrapper } from "../ui/magnetic-wrapper";
 
 interface ProcessProps {
   onOpenModal: () => void;
 }
 
-export function Process({ onOpenModal }: ProcessProps) {
-  const [activeStepIndex, setActiveStepIndex] = useState<number>(0);
-  const activeStep = PROCESS_STEPS[activeStepIndex];
+interface StepItem {
+  num: string;
+  id: string;
+  title: string;
+  subtitle: string;
+  whatWeDo: string;
+  whatYouGet: string[];
+  icon: React.ReactNode;
+}
 
-  const stepIcons = [
-    <Search key="1" className="w-5 h-5" />,
-    <PenTool key="2" className="w-5 h-5" />,
-    <Code key="3" className="w-5 h-5" />,
-    <Rocket key="4" className="w-5 h-5" />,
-    <RefreshCw key="5" className="w-5 h-5" />,
-  ];
+const PROCESS_STEPS: StepItem[] = [
+  {
+    num: "01",
+    id: "discover",
+    title: "DISCOVER",
+    subtitle: "Strategy & Business Alignment",
+    whatWeDo: "We deep-dive into your business goals, target user psychology, competitive landscape, and technical specifications before writing code.",
+    whatYouGet: ["Product Vision Brief", "User Archetype Specs", "Tech Stack Architecture", "Project Roadmap"],
+    icon: <Target className="w-5 h-5 text-amber-400" />,
+  },
+  {
+    num: "02",
+    id: "design",
+    title: "DESIGN",
+    subtitle: "Visual Identity & User Interface",
+    whatWeDo: "We craft custom typography hierarchies, high-contrast obsidian design systems, micro-interactions, and interactive Figma prototypes.",
+    whatYouGet: ["Figma Design System", "Interactive Prototypes", "Motion Specs", "Brand Alignment"],
+    icon: <Layers className="w-5 h-5 text-amber-400" />,
+  },
+  {
+    num: "03",
+    id: "build",
+    title: "BUILD",
+    subtitle: "Software Engineering & Motion",
+    whatWeDo: "We convert approved designs into clean, modular Next.js and TypeScript codebases with GSAP scroll physics and sub-second loading.",
+    whatYouGet: ["Next.js & React Codebase", "GSAP Motion Scripts", "API & Webhook Engines", "100 Speed Benchmark"],
+    icon: <Sparkles className="w-5 h-5 text-amber-400" />,
+  },
+  {
+    num: "04",
+    id: "launch",
+    title: "LAUNCH",
+    subtitle: "Quality Assurance & Deployment",
+    whatWeDo: "Rigorous cross-device verification across 7 viewports, accessibility validation, technical SEO indexing, and zero-downtime deployment.",
+    whatYouGet: ["Cross-Browser Verification", "Technical SEO Indexing", "SSL & Domain Setup", "Global Edge CDN"],
+    icon: <Rocket className="w-5 h-5 text-amber-400" />,
+  },
+  {
+    num: "05",
+    id: "grow",
+    subtitle: "Optimization & Partnership",
+    title: "GROW",
+    whatWeDo: "Long-term engineering partnership, Core Web Vitals monitoring, bi-weekly feature sprints, and ongoing conversion optimization.",
+    whatYouGet: ["24/7 Uptime Monitoring", "Bi-Weekly Enhancements", "Security Hardening", "Growth Analytics"],
+    icon: <TrendingUp className="w-5 h-5 text-amber-400" />,
+  },
+];
+
+export function Process({ onOpenModal }: ProcessProps) {
+  const [activeStepIdx, setActiveStepIdx] = useState(0);
+  const activeStep = PROCESS_STEPS[activeStepIdx];
 
   return (
-    <section id="process" className="py-24 md:py-32 relative z-10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="process" className="py-24 md:py-36 relative z-10 exhibition-grid">
+      <div className="max-w-7xl mx-auto px-6 md:px-12 space-y-16">
         
         <SectionHeading
-          badge="Our Workflow"
-          title="From initial vision to"
-          gradientText="market-leading product."
-          subtitle="Our 5-stage engineering process ensures transparent milestones, fast iteration, and zero launch surprises."
+          badge="OUR METHODOLOGY"
+          title="Connected workflow."
+          gradientText="Predictable outcomes."
+          subtitle="A structured 5-stage engineering process designed to take your digital presence from concept to high-performance launch."
         />
 
-        {/* Interactive Step Navigation Pipeline */}
-        <div className="mt-16 grid grid-cols-2 sm:grid-cols-5 gap-3 p-2 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
-          {PROCESS_STEPS.map((step, idx) => {
-            const isActive = idx === activeStepIndex;
-            return (
-              <button
-                key={step.step}
-                onClick={() => setActiveStepIndex(idx)}
-                className={`p-4 rounded-xl text-left transition-all duration-300 relative flex flex-col justify-between border ${
-                  isActive
-                    ? "bg-gradient-to-r from-echolance-cyan/20 to-echolance-indigo/20 border-echolance-cyan/50 shadow-[0_0_20px_rgba(56,189,248,0.2)]"
-                    : "bg-transparent border-transparent hover:bg-white/5 text-slate-400 hover:text-white"
-                }`}
-              >
-                <div className="flex items-center justify-between mb-3">
-                  <span className={`font-mono text-xs ${isActive ? "text-echolance-cyan font-bold" : "text-slate-500"}`}>
-                    STAGE {step.step}
-                  </span>
-                  <div
-                    className={`p-1.5 rounded-lg ${
-                      isActive ? "bg-echolance-cyan text-slate-950" : "bg-white/5 text-slate-400"
-                    }`}
-                  >
-                    {stepIcons[idx]}
-                  </div>
-                </div>
+        {/* Connected Process Track */}
+        <div className="relative">
+          
+          {/* Progress Indicator Line */}
+          <div className="hidden lg:block absolute top-1/2 left-0 right-0 h-[2px] bg-white/10 -translate-y-1/2 z-0" />
+          <div
+            className="hidden lg:block absolute top-1/2 left-0 h-[2px] bg-amber-400 -translate-y-1/2 z-0 transition-all duration-500"
+            style={{ width: `${(activeStepIdx / (PROCESS_STEPS.length - 1)) * 100}%` }}
+          />
 
-                <div>
-                  <h4 className={`text-sm font-bold truncate ${isActive ? "text-white" : "text-slate-300"}`}>
-                    {step.title.split("&")[0]}
+          {/* Timeline Nodes */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 relative z-10">
+            {PROCESS_STEPS.map((step, idx) => {
+              const isActive = idx === activeStepIdx;
+              const isPast = idx < activeStepIdx;
+              return (
+                <button
+                  key={step.id}
+                  onClick={() => setActiveStepIdx(idx)}
+                  className={`p-5 rounded-2xl border text-left transition-all duration-300 ${
+                    isActive
+                      ? "bg-amber-400/15 border-amber-400 text-white shadow-[0_10px_30px_rgba(251,191,36,0.15)] scale-[1.02]"
+                      : isPast
+                      ? "bg-white/5 border-white/20 text-slate-300"
+                      : "bg-white/[0.02] border-white/5 text-slate-500 hover:text-slate-300"
+                  }`}
+                >
+                  <div className="flex items-center justify-between text-xs font-mono font-bold mb-2">
+                    <span className={isActive ? "text-amber-400" : "text-slate-500"}>
+                      STEP {step.num}
+                    </span>
+                    {step.icon}
+                  </div>
+                  <h4 className="text-lg font-extrabold font-sans tracking-tight text-white uppercase">
+                    {step.title}
                   </h4>
-                  <span className="text-[10px] font-mono text-slate-500 block mt-0.5">
-                    {step.duration}
-                  </span>
-                </div>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Active Stage Detailed Breakdown Panel */}
-        <div className="mt-8">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeStep.step}
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -15 }}
-              transition={{ duration: 0.4 }}
-              className="rounded-3xl bg-[#0b0d15] border border-white/10 p-8 lg:p-12 shadow-2xl grid grid-cols-1 lg:grid-cols-12 gap-10 items-center relative overflow-hidden"
-            >
-              {/* Background ambient radial glow */}
-              <div className="absolute top-0 right-0 w-96 h-96 bg-echolance-indigo/10 rounded-full blur-3xl pointer-events-none" />
-
-              {/* Left Side: Overview & Key Outcome */}
-              <div className="lg:col-span-6 space-y-6">
-                <div className="flex items-center gap-3">
-                  <span className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-echolance-cyan to-echolance-violet font-mono">
-                    STAGE {activeStep.step}
-                  </span>
-                  <div className="h-4 w-[1px] bg-white/15" />
-                  <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-mono text-slate-300">
-                    <Clock className="w-3.5 h-3.5 text-echolance-cyan" />
-                    <span>{activeStep.duration}</span>
-                  </div>
-                </div>
-
-                <h3 className="text-3xl sm:text-4xl font-bold text-white leading-tight">
-                  {activeStep.title}
-                </h3>
-
-                <p className="text-slate-300 text-base leading-relaxed">
-                  {activeStep.description}
-                </p>
-
-                <div className="p-5 rounded-2xl bg-gradient-to-r from-echolance-emerald/10 to-transparent border border-echolance-emerald/30">
-                  <span className="text-xs font-mono uppercase tracking-wider text-echolance-emerald block mb-1">
-                    Key Outcome Guaranteed
-                  </span>
-                  <p className="text-sm font-semibold text-white">
-                    {activeStep.keyOutcome}
+                  <p className="text-[11px] font-mono text-slate-400 mt-1 line-clamp-1">
+                    {step.subtitle}
                   </p>
-                </div>
-
-                <div className="pt-2">
-                  <Button
-                    onClick={onOpenModal}
-                    variant="primary"
-                    size="md"
-                    icon={<Sparkles className="w-4 h-4" />}
-                  >
-                    Initiate Stage 01 with Us
-                  </Button>
-                </div>
-              </div>
-
-              {/* Right Side: Stage Deliverables Checklist */}
-              <div className="lg:col-span-6 space-y-4">
-                <h4 className="text-xs font-mono uppercase tracking-widest text-slate-400 mb-4">
-                  Tangible Deliverables Handed Over:
-                </h4>
-
-                <div className="space-y-3">
-                  {activeStep.deliverables.map((item, i) => (
-                    <motion.div
-                      key={item}
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: i * 0.1 }}
-                      className="p-4 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-between text-sm text-white glass-panel-hover"
-                    >
-                      <div className="flex items-center gap-3">
-                        <CheckCircle2 className="w-5 h-5 text-echolance-cyan shrink-0" />
-                        <span className="font-medium">{item}</span>
-                      </div>
-                      <span className="text-xs font-mono text-slate-500">COMPLETE</span>
-                    </motion.div>
-                  ))}
-                </div>
-              </div>
-
-            </motion.div>
-          </AnimatePresence>
+                </button>
+              );
+            })}
+          </div>
         </div>
+
+        {/* Active Stage Dynamic Spec Panel */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeStep.id}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.4 }}
+            className="rounded-3xl bg-[#0b0d15] border border-white/10 p-6 md:p-10 shadow-2xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center"
+          >
+            {/* Left: WHAT WE DO */}
+            <div className="lg:col-span-7 space-y-4 text-left">
+              <div className="inline-flex items-center gap-2 text-xs font-mono text-amber-400 font-bold uppercase tracking-wider">
+                <span>STAGE {activeStep.num} SPECIFICATION</span>
+              </div>
+              <h3 className="text-2xl sm:text-3xl font-extrabold text-white uppercase font-sans">
+                {activeStep.title}: {activeStep.subtitle}
+              </h3>
+              <p className="text-sm text-slate-300 leading-relaxed font-sans">
+                {activeStep.whatWeDo}
+              </p>
+
+              <div className="pt-2">
+                <MagneticWrapper strength={15}>
+                  <button
+                    onClick={onOpenModal}
+                    className="group inline-flex items-center gap-2 px-6 py-3 rounded-full bg-amber-400 text-black font-mono font-bold text-xs hover:bg-amber-300 transition-colors"
+                  >
+                    <span>START THIS STAGE</span>
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </button>
+                </MagneticWrapper>
+              </div>
+            </div>
+
+            {/* Right: WHAT YOU GET */}
+            <div className="lg:col-span-5 p-6 rounded-2xl bg-[#06070a] border border-white/10 space-y-3 font-sans">
+              <h5 className="text-xs font-mono tracking-widest text-slate-400 uppercase border-b border-white/10 pb-2">
+                DELIVERABLES PRODUCED:
+              </h5>
+              <div className="space-y-2">
+                {activeStep.whatYouGet.map((deliverable) => (
+                  <div
+                    key={deliverable}
+                    className="flex items-center gap-3 text-xs text-slate-200 p-2 rounded-lg bg-white/5 border border-white/5"
+                  >
+                    <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0" />
+                    <span>{deliverable}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        </AnimatePresence>
 
       </div>
     </section>

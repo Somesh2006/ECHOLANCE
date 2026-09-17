@@ -30,23 +30,23 @@ export function SectionHeading({
       )}
     >
       {badge && (
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-md text-xs font-mono uppercase tracking-widest text-echolance-cyan w-fit">
-          <span className="w-1.5 h-1.5 rounded-full bg-echolance-cyan animate-pulse" />
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-md text-xs font-mono uppercase tracking-widest text-echolance-gold w-fit">
+          <span className="w-1.5 h-1.5 rounded-full bg-echolance-gold animate-pulse" />
           {badge}
         </div>
       )}
 
-      <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-[1.1]">
+      <h2 className="text-3xl md:text-5xl lg:text-6xl font-black tracking-tight text-white leading-[1.08] font-mono uppercase">
         {title}{" "}
         {gradientText && (
-          <span className="text-gradient-cyan block sm:inline mt-1 sm:mt-0">
+          <span className="text-gradient-gold block sm:inline mt-1 sm:mt-0">
             {gradientText}
           </span>
         )}
       </h2>
 
       {subtitle && (
-        <p className="text-base md:text-lg text-slate-400 font-normal leading-relaxed mt-2">
+        <p className="text-sm md:text-base text-slate-400 font-normal leading-relaxed mt-2 font-sans">
           {subtitle}
         </p>
       )}

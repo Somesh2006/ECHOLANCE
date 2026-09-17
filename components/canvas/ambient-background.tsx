@@ -2,17 +2,21 @@
 
 import React, { useEffect, useRef } from "react";
 
-interface Blob {
+interface Particle {
   x: number;
   y: number;
-  targetX: number;
-  targetY: number;
-  radius: number;
-  color: string;
+  baseX: number;
+  baseY: number;
+  size: number;
+  alpha: number;
+  baseAlpha: number;
+  twinkleSpeed: number;
+  twinklePhase: number;
   vx: number;
   vy: number;
-  pulsePhase: number;
-  speed: number;
+  color: string;
+  isBright: boolean;
+  blur: number;
 }
 
 export function AmbientBackground() {
@@ -28,17 +32,16 @@ export function AmbientBackground() {
     let width = (canvas.width = window.innerWidth);
     let height = (canvas.height = window.innerHeight);
 
-    // Check prefers-reduced-motion
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const prefersReducedMotion =
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     // Mouse tracking with smooth lerp
     const mouse = {
-      x: width / 2,
-      y: height / 2,
-      targetX: width / 2,
-      targetY: height / 2,
-      velX: 0,
-      velY: 0,
+      x: -1000,
+      y: -1000,
+      targetX: -1000,
+      targetY: -1000,
+      radius: 180,
     };
 
     const handleMouseMove = (e: MouseEvent) => {
@@ -46,166 +49,179 @@ export function AmbientBackground() {
       mouse.targetY = e.clientY;
     };
 
-    window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    const handleMouseLeave = () => {
+      mouse.targetX = -1000;
+      mouse.targetY = -1000;
+    };
 
-    // Handle Resize
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    document.addEventListener("mouseleave", handleMouseLeave);
+
     const handleResize = () => {
       if (!canvas) return;
       width = canvas.width = window.innerWidth;
       height = canvas.height = window.innerHeight;
+      initParticles();
     };
     window.addEventListener("resize", handleResize);
 
-    // Initialize Blobs (Soft Gradient Orbs)
-    const blobColors = [
-      "rgba(56, 189, 248, 0.12)",   // Electric Cyan
-      "rgba(99, 102, 241, 0.14)",   // Indigo
-      "rgba(139, 92, 246, 0.10)",   // Violet
-      "rgba(244, 63, 94, 0.06)",    // Soft Rose Accent
-      "rgba(16, 185, 129, 0.07)",   // Emerald Accent
+    const isMobile = window.innerWidth < 768;
+    const particleCount = prefersReducedMotion ? 40 : isMobile ? 120 : 380;
+
+    const goldPalette = [
+      "rgba(216, 179, 106, ", // Champagne gold #D8B36A
+      "rgba(240, 201, 120, ", // Bright gold #F0C978
+      "rgba(245, 242, 234, ", // Ivory white #F5F2EA
+      "rgba(180, 140, 75, ",  // Deep antique gold
     ];
 
-    const blobs: Blob[] = Array.from({ length: 5 }, (_, i) => ({
-      x: Math.random() * width,
-      y: Math.random() * height,
-      targetX: Math.random() * width,
-      targetY: Math.random() * height,
-      radius: Math.min(width, height) * (0.35 + Math.random() * 0.25),
-      color: blobColors[i % blobColors.length],
-      vx: (Math.random() - 0.5) * 0.4,
-      vy: (Math.random() - 0.5) * 0.4,
-      pulsePhase: Math.random() * Math.PI * 2,
-      speed: 0.002 + Math.random() * 0.003,
-    }));
+    let particles: Particle[] = [];
 
-    // Floating particles (dust/light trails)
-    const particleCount = prefersReducedMotion ? 12 : 35;
-    const particles = Array.from({ length: particleCount }, () => ({
-      x: Math.random() * width,
-      y: Math.random() * height,
-      size: 1 + Math.random() * 2,
-      speedY: 0.15 + Math.random() * 0.35,
-      speedX: (Math.random() - 0.5) * 0.2,
-      opacity: 0.1 + Math.random() * 0.4,
-    }));
+    const initParticles = () => {
+      particles = [];
+      for (let i = 0; i < particleCount; i++) {
+        // Distribute some in clusters along gentle curved diagonal bands
+        const inCluster = Math.random() > 0.4;
+        let x = Math.random() * width;
+        let y = Math.random() * height;
+
+        if (inCluster) {
+          // Subtle clustering along orbital paths
+          const band = Math.random();
+          y = (band * height + (Math.random() - 0.5) * 150 + height) % height;
+          x = (x + Math.sin(y * 0.003) * 120 + width) % width;
+        }
+
+        const isBright = Math.random() < 0.08;
+        const isBlurry = Math.random() < 0.12;
+
+        const size = isBright
+          ? 1.8 + Math.random() * 1.8
+          : isBlurry
+          ? 3.5 + Math.random() * 4.5
+          : 0.6 + Math.random() * 1.4;
+
+        const baseAlpha = isBright
+          ? 0.5 + Math.random() * 0.45
+          : isBlurry
+          ? 0.06 + Math.random() * 0.12
+          : 0.12 + Math.random() * 0.4;
+
+        const paletteColor =
+          goldPalette[Math.floor(Math.random() * goldPalette.length)];
+
+        particles.push({
+          x,
+          y,
+          baseX: x,
+          baseY: y,
+          size,
+          alpha: baseAlpha,
+          baseAlpha,
+          twinkleSpeed: 0.015 + Math.random() * 0.03,
+          twinklePhase: Math.random() * Math.PI * 2,
+          vx: (Math.random() - 0.5) * 0.18 + 0.06, // Gentle slow drift to right
+          vy: (Math.random() - 0.5) * 0.12 - 0.08, // Gentle upward drift
+          color: paletteColor,
+          isBright,
+          blur: isBlurry ? 4 : isBright ? 2 : 0,
+        });
+      }
+    };
+
+    initParticles();
 
     let time = 0;
 
     const render = () => {
       time += 0.008;
 
-      // Smooth mouse interpolation (LERP)
-      mouse.x += (mouse.targetX - mouse.x) * 0.05;
-      mouse.y += (mouse.targetY - mouse.y) * 0.05;
-      mouse.velX = (mouse.targetX - mouse.x) * 0.01;
-      mouse.velY = (mouse.targetY - mouse.y) * 0.01;
+      // Mouse lerp
+      mouse.x += (mouse.targetX - mouse.x) * 0.08;
+      mouse.y += (mouse.targetY - mouse.y) * 0.08;
 
-      // Clear Canvas
-      ctx.fillStyle = "#07080d";
-      ctx.fillRect(0, 0, width, height);
+      ctx.clearRect(0, 0, width, height);
 
-      // Render Gradient Orbs with Blend Modes
-      ctx.globalCompositeOperation = "screen";
+      // Render dust particles
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
 
-      blobs.forEach((blob, idx) => {
         if (!prefersReducedMotion) {
-          blob.pulsePhase += blob.speed;
-          
-          // Wander target
-          blob.x += blob.vx + Math.sin(time + idx) * 0.4;
-          blob.y += blob.vy + Math.cos(time + idx * 0.7) * 0.4;
+          // Ambient slow natural flow with wave modulation
+          p.x += p.vx + Math.sin(time + p.baseY * 0.004) * 0.12;
+          p.y += p.vy + Math.cos(time + p.baseX * 0.004) * 0.08;
 
-          // Gentle mouse attraction
-          const dx = mouse.x - blob.x;
-          const dy = mouse.y - blob.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 600) {
-            blob.x += (dx / dist) * 0.3;
-            blob.y += (dy / dist) * 0.3;
+          // Twinkle pulse
+          p.twinklePhase += p.twinkleSpeed;
+          p.alpha =
+            p.baseAlpha + Math.sin(p.twinklePhase) * (p.baseAlpha * 0.35);
+
+          // Cursor interaction: gentle repel & highlight
+          if (mouse.x > -500) {
+            const dx = mouse.x - p.x;
+            const dy = mouse.y - p.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+
+            if (dist < mouse.radius && dist > 0) {
+              const force = (1 - dist / mouse.radius) * 0.8;
+              const angle = Math.atan2(dy, dx);
+              p.x -= Math.cos(angle) * force * 3;
+              p.y -= Math.sin(angle) * force * 3;
+              // Slightly brighten particle near cursor
+              p.alpha = Math.min(1, p.alpha + force * 0.4);
+            }
           }
 
           // Screen wrap
-          if (blob.x < -blob.radius) blob.x = width + blob.radius;
-          if (blob.x > width + blob.radius) blob.x = -blob.radius;
-          if (blob.y < -blob.radius) blob.y = height + blob.radius;
-          if (blob.y > height + blob.radius) blob.y = -blob.radius;
+          if (p.x < -20) p.x = width + 20;
+          if (p.x > width + 20) p.x = -20;
+          if (p.y < -20) p.y = height + 20;
+          if (p.y > height + 20) p.y = -20;
         }
 
-        const currentRadius = blob.radius * (1 + Math.sin(blob.pulsePhase) * 0.08);
-
-        const gradient = ctx.createRadialGradient(
-          blob.x,
-          blob.y,
-          0,
-          blob.x,
-          blob.y,
-          currentRadius
-        );
-        gradient.addColorStop(0, blob.color);
-        gradient.addColorStop(0.6, blob.color.replace(/[\d\.]+\)$/, "0.03)"));
-        gradient.addColorStop(1, "rgba(7, 8, 13, 0)");
-
-        ctx.fillStyle = gradient;
-        ctx.beginPath();
-        ctx.arc(blob.x, blob.y, currentRadius, 0, Math.PI * 2);
-        ctx.fill();
-      });
-
-      // Mouse interactive light orb
-      const mouseGrad = ctx.createRadialGradient(
-        mouse.x,
-        mouse.y,
-        0,
-        mouse.x,
-        mouse.y,
-        350
-      );
-      mouseGrad.addColorStop(0, "rgba(56, 189, 248, 0.08)");
-      mouseGrad.addColorStop(0.5, "rgba(99, 102, 241, 0.04)");
-      mouseGrad.addColorStop(1, "rgba(7, 8, 13, 0)");
-      ctx.fillStyle = mouseGrad;
-      ctx.beginPath();
-      ctx.arc(mouse.x, mouse.y, 350, 0, Math.PI * 2);
-      ctx.fill();
-
-      // Reset Composite Operation
-      ctx.globalCompositeOperation = "source-over";
-
-      // Draw subtle tech grid lines overlay
-      ctx.strokeStyle = "rgba(255, 255, 255, 0.018)";
-      ctx.lineWidth = 1;
-      const gridSize = 64;
-      const gridOffsetY = (time * 10) % gridSize;
-
-      for (let x = 0; x < width; x += gridSize) {
-        ctx.beginPath();
-        ctx.moveTo(x, 0);
-        ctx.lineTo(x, height);
-        ctx.stroke();
-      }
-      for (let y = gridOffsetY; y < height; y += gridSize) {
-        ctx.beginPath();
-        ctx.moveTo(0, y);
-        ctx.lineTo(width, y);
-        ctx.stroke();
-      }
-
-      // Draw subtle particles
-      particles.forEach((p) => {
-        if (!prefersReducedMotion) {
-          p.y -= p.speedY;
-          p.x += p.speedX + Math.sin(time + p.y * 0.01) * 0.2;
-          if (p.y < 0) {
-            p.y = height;
-            p.x = Math.random() * width;
-          }
-        }
-
-        ctx.fillStyle = `rgba(255, 255, 255, ${p.opacity})`;
+        // Draw particle
+        ctx.fillStyle = `${p.color}${Math.max(0, Math.min(1, p.alpha))})`;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
         ctx.fill();
-      });
+
+        // Extra halo for bright glittering crystals
+        if (p.isBright && p.alpha > 0.4) {
+          const glowGrad = ctx.createRadialGradient(
+            p.x,
+            p.y,
+            0,
+            p.x,
+            p.y,
+            p.size * 4
+          );
+          glowGrad.addColorStop(0, `rgba(240, 201, 120, ${p.alpha * 0.35})`);
+          glowGrad.addColorStop(1, "rgba(240, 201, 120, 0)");
+          ctx.fillStyle = glowGrad;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size * 4, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      // Very subtle cursor golden light field
+      if (mouse.x > -500 && !prefersReducedMotion) {
+        const cursorGlow = ctx.createRadialGradient(
+          mouse.x,
+          mouse.y,
+          0,
+          mouse.x,
+          mouse.y,
+          240
+        );
+        cursorGlow.addColorStop(0, "rgba(216, 179, 106, 0.04)");
+        cursorGlow.addColorStop(0.5, "rgba(216, 179, 106, 0.015)");
+        cursorGlow.addColorStop(1, "rgba(8, 8, 8, 0)");
+        ctx.fillStyle = cursorGlow;
+        ctx.beginPath();
+        ctx.arc(mouse.x, mouse.y, 240, 0, Math.PI * 2);
+        ctx.fill();
+      }
 
       animationFrameId = requestAnimationFrame(render);
     };
@@ -215,20 +231,18 @@ export function AmbientBackground() {
     return () => {
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseleave", handleMouseLeave);
       window.removeEventListener("resize", handleResize);
     };
   }, []);
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+    <div className="fixed inset-0 pointer-events-none z-10 overflow-hidden">
       <canvas
         ref={canvasRef}
-        className="block w-full h-full opacity-90 transition-opacity duration-1000"
+        className="block w-full h-full opacity-90"
       />
-      {/* Noise Texture Overlay for High-End Film/Agency Depth */}
-      <div className="absolute inset-0 bg-noise opacity-40 pointer-events-none mix-blend-overlay" />
-      {/* Top subtle vignette */}
-      <div className="absolute inset-0 bg-radial-gradient from-transparent via-transparent to-[#07080d]/80 pointer-events-none" />
     </div>
   );
 }
+
